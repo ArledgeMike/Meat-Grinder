@@ -1,6 +1,6 @@
 Meat-Grinder
 ===========
-<img src ="https://raw.github.com/ArledgeMike/Emperors-New-Clothes/master/images/meat-grinder.png" />
+<img src ="https://raw.githubusercontent.com/ArledgeMike/Meat-Grinder/master/images/meat-grinder.png" />
 
 
 <h2>Copy to HTML grinder</h2> <p>Version 1.01 - sausage</p>
