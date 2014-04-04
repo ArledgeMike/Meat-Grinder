@@ -1,10 +1,12 @@
+class MeatGrinder
+  
+def initialize(meats, sausage)
 
-def parse_html(doc)
-  text= File.open("#{doc}").read
-  puts "What is the name of the new document"
-  @new_doc = gets.chomp
-  @new_file = File.new("#{@new_doc}-output.txt", "w")
-
+  text= File.open("#{meats}").read
+  @new_file = File.new("#{sausage}-output.txt", "w")
+  
+  @list_array = []
+  
   text.each_line do |line|
     
 	if line[0] == '['
@@ -18,30 +20,54 @@ def parse_html(doc)
     if line[0] == '<'
       @first = line.index('<')
       @last = line.index('>', @first)
-      @close_tag = line[@first..@last]
-      if @close_tag == "<img>"
-        line= line[@first..@last]
-	   # print "#{line.insert(line.length-1, '/')}\n"
-        @new_file.puts("#{line.insert(line.length-1, '/')}\n")     
-	  else
-        @close_tag.insert(1, '/')
-      # print "#{line.rstrip << @close_tag}\n"
-		@new_file.puts("#{line.rstrip << @close_tag}\n")
+      @tag = line[@first..@last]
+      
+      case @tag
+      when "<img>"
+        empty_list_array
+        line = line[@first..@last]
+        @new_file.puts("#{line.insert(line.length-1, '/')}\n")
+      when "*"
+        @open = "<li>"
+        @close = "</li>"
+        line[0..1] = @open
+  	    @new_file.puts("#{line.insert(line.length-1, @close)}")
+      when "<li>"
+        if @list_array.empty?
+          @list_array[0]= "<ul>"
+          puts "added first ul"
+        end
+        @close_tag = @tag.insert(1, '/')
+        @list_array << "#{line.rstrip << @close_tag}\n"
+      else
+        empty_list_array
+        @close_tag = @tag.insert(1, '/')
+		    @new_file.puts("#{line.rstrip << @close_tag}\n")
       end
-    end
-    
-	if line[0] == '*'
-      @open = "<li>"
-      @close = "</li>"
-      line[0..1] = @open
-     # print "#{line.insert(line.length-1, @close)}"
-	  @new_file.puts("#{line.insert(line.length-1, @close)}")
+         
     end
   
   end
   @new_file.close
 end
 
+def empty_list_array
+  if @list_array.count > 0
+    @list_array << "</ul>"
+    @list_array.each do |node|
+     @new_file.puts("#{node}")
+    end
+    @list_array = []
+  end
+end
+
+end
+
 puts "What file do you want to convert"
 text = gets.chomp
-parse_html(text)
+
+puts "What is the name of the new document"
+new_doc = gets.chomp
+
+
+@m = MeatGrinder.new(text, new_doc)
